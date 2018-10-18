@@ -1,0 +1,96 @@
+# Determines the Docker Compose file format, and consequently, the minimum
+# version of Docker required to process this file; 3.7 is the latest,
+# 3.0+ is recommended
+# https://docs.docker.com/compose/compose-file/compose-versioning/
+version: "3.4"
+# You can define services, networks, and volumes
+# TODO: What is a service?
+services:
+  # I don't think the services have preset names
+  php:
+    # Each service (php in this case) has a build.
+    # A build is a set of configuration options for the service.
+    build:
+      # Specifies a folder or git repo with a Dockerfile
+      # https://docs.docker.com/compose/compose-file/#context
+      context: './php'
+      # Specifies environment variables to be used when building the image
+      args:
+        # If not specified, I think the latest version of PHP will be used
+        # based on how the images are named
+        PHP_VERSION: ${PHP_VERSION}
+    # The network name is based on the name of the directory the Dockerfile
+    # for the service is found in, but it can be overidden if necessary
+    # This is the network config for the "php" service.
+    # Apparently, you can specify network drivers if you need to get fancy.
+    # The "bridge" driver is used by default and allows containers to talk to
+    # one another
+    networks:
+      # You can give an alias to the "backend" network if you like
+      # I suppose "backend" refers to communication only between containers
+      # and not with the outside world (server-side vs. client-side). You can
+      # specify "frontend" as well if needed but our apache service will handle
+      # that.
+      - backend
+    # Specifies the container name instead of using a generated default name
+    # https://docs.docker.com/compose/compose-file/#container_name
+    container_name: php
+    # Lets you mount folders or volumes. This can be done on a service or
+    # top-level basis. Top-level would share the same files across all services.
+    # There are two formats for volumes, a short syntax and long syntax where
+    # you can specify additional fields (source, target, type). Long syntax is
+    # available for Compose file formats 3.2+.
+    # https://docs.docker.com/compose/compose-file/#volumes
+    volumes:
+      # three possible values here: volume, bind, or tmpfs
+      # what are the differences?
+      # https://docs.docker.com/compose/compose-file/#long-syntax-3
+      - type: volume
+        # the source of the mount; a path on the host for a bind mount or
+        # the name of a volume defined in the top level.
+        # can the source use "~" for paths?
+        source: sites
+        # the path in the container where the volume (source) is mounted
+        target: /var/www/html
+        volume:
+          # flag to disable copying of data from a container when a volume is
+          # created
+          nocopy: true
+  apache:
+    build:
+      args:
+        APACHE_VERSION: ${APACHE_VERSION}
+      context: './apache/'
+    container_name: apache
+    depends_on:
+      - php
+    # needs to communicate with other containers (backend)
+    # needs to communicate with the outside world (frontend)
+    networks:
+      - frontend
+      - backend
+    # maps port 80 on the host to port 80 in the apache container
+    # https://docs.docker.com/compose/compose-file/#ports
+    # When you have a sub-item, that creates an array
+    ports:
+      - "80:80"
+    volumes:
+      # three possible values here: volume, bind, or tmpfs
+      # what are the differences?
+      # https://docs.docker.com/compose/compose-file/#long-syntax-3
+      - type: volume
+        # the source of the mount; a path on the host for a bind mount or
+        # the name of a volume defined in the top level.
+        # can the source use "~" for paths?
+        source: sites
+        # the path in the container where the volume (source) is mounted
+        target: /var/www/html
+        volume:
+          # flag to disable copying of data from a container when a volume is
+          # created
+          nocopy: true
+networks:
+  frontend:
+  backend:
+volumes:
+  sites:
