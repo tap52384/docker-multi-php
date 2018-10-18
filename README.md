@@ -50,6 +50,12 @@ one as needed, hopefully
 #### [Stop one or more running containers]()
 `docker stop CONTAINER [CONTAINER...]`
 
+#### [Stop all running containers](http://blog.baudson.de/blog/stop-and-remove-all-docker-containers-and-images)
+`docker stop $(docker ps -aq)`
+
+#### [Stop and remove all running containers]()
+`docker stop $(docker ps -aq) && docker rm $(docker ps -aq)`
+
 #### [Delete one or more containers]()
 `docker rm CONTAINER [CONTAINER...]`
 
@@ -66,6 +72,17 @@ one as needed, hopefully
 `docker-compose config`
 
 > Run this command in the same folder as the `docker-compose.yml` file.
+
+#### [Start multiple container application detached](https://docs.docker.com/compose/reference/up/)
+`docker-compose up -d --build`
+
+#### [Stop and remove containers created via docker-compose up](https://docs.docker.com/compose/reference/down/)
+`docker-compose down`
+
+> You also have the option to remove the images if necessary using `--rmi type`.
+
+#### Switch PHP version with a single command
+`docker-compose down && docker-compose build --build-arg PHP_VERSION=7.0 && docker-compose up -d`
 
 ### Download
 
