@@ -44,6 +44,18 @@ one as needed, hopefully
 #### [See a list of running containers]()
 `docker ps`
 
+#### [See all containers, running or not]()
+`docker ps --all`
+
+#### [Stop one or more running containers]()
+`docker stop CONTAINER [CONTAINER...]`
+
+#### [Delete one or more containers]()
+`docker rm CONTAINER [CONTAINER...]`
+
+#### [See a list of images]()
+`docker image ls`
+
 #### [Stop one or more running containers](https://docs.docker.com/engine/reference/commandline/stop/)
 `docker stop [OPTIONS] CONTAINER [CONTAINER...]`
 

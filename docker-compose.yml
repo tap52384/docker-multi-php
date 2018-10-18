@@ -41,21 +41,10 @@ services:
     # you can specify additional fields (source, target, type). Long syntax is
     # available for Compose file formats 3.2+.
     # https://docs.docker.com/compose/compose-file/#volumes
+    # This correctly mounts the "~/sites" folder in the "apache" container at
+    # /var/www/html
     volumes:
-      # three possible values here: volume, bind, or tmpfs
-      # what are the differences?
-      # https://docs.docker.com/compose/compose-file/#long-syntax-3
-      - type: volume
-        # the source of the mount; a path on the host for a bind mount or
-        # the name of a volume defined in the top level.
-        # can the source use "~" for paths?
-        source: sites
-        # the path in the container where the volume (source) is mounted
-        target: /var/www/html
-        volume:
-          # flag to disable copying of data from a container when a volume is
-          # created
-          nocopy: true
+      - ~/sites/:/var/www/html
   apache:
     build:
       args:
@@ -74,21 +63,10 @@ services:
     # When you have a sub-item, that creates an array
     ports:
       - "80:80"
+    # This correctly mounts the "~/sites" folder in the "apache" container at
+    # /var/www/html
     volumes:
-      # three possible values here: volume, bind, or tmpfs
-      # what are the differences?
-      # https://docs.docker.com/compose/compose-file/#long-syntax-3
-      - type: volume
-        # the source of the mount; a path on the host for a bind mount or
-        # the name of a volume defined in the top level.
-        # can the source use "~" for paths?
-        source: sites
-        # the path in the container where the volume (source) is mounted
-        target: /var/www/html
-        volume:
-          # flag to disable copying of data from a container when a volume is
-          # created
-          nocopy: true
+      - ~/sites/:/var/www/html
 networks:
   frontend:
   backend:
