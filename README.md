@@ -7,7 +7,7 @@ The goal is to use docker to create a development environment with multiple vers
 -   Learn how best switch between versions while using as many layers in common as possible
 -   Find a small base image for these purposes to build from
 
-## Explanation
+## How Does It All Work?
 In this repository, each folder represents an image. Any files in the folder can
 be referenced by the respective `Dockerfile`.
 
@@ -62,6 +62,9 @@ one as needed, hopefully
 #### [See a list of images]()
 `docker image ls`
 
+#### [Delete all images]
+`docker image rm $(docker image ls -aq)`
+
 #### [Stop one or more running containers](https://docs.docker.com/engine/reference/commandline/stop/)
 `docker stop [OPTIONS] CONTAINER [CONTAINER...]`
 
@@ -82,7 +85,16 @@ one as needed, hopefully
 > You also have the option to remove the images if necessary using `--rmi type`.
 
 #### Switch PHP version with a single command
-`docker-compose down && docker-compose build --build-arg PHP_VERSION=7.0 && docker-compose up -d`
+`docker-compose down && docker-compose build --build-arg PHP_VERSION=5.6 && docker-compose up -d`
+
+#### Switch PHP version with a single command & delete intermediate images (good for debugging)
+`docker-compose down && docker-compose build --no-cache --force-rm --build-arg PHP_VERSION=5.6 && docker-compose up -d`
+
+#### Open a shell into an Alpine Linux container without Bash
+`docker exec -it CONTAINER /bin/sh`
+
+> Alpine Docker images do not have bash installed by default. You can use the
+> following command to install it: `RUN apk add --no-cash bash`
 
 ### Download
 

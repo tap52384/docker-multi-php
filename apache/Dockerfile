@@ -2,6 +2,8 @@
 ARG APACHE_VERSION=""
 FROM httpd:${APACHE_VERSION:+${APACHE_VERSION}-}alpine
 
+LABEL maintainer="Z. Patrick Lewis <tap52384@gmail.com>"
+
 RUN apk update; \
     apk upgrade;
 
