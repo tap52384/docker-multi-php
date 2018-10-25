@@ -119,7 +119,7 @@ as the PHP_VERSION variable is only used in the `php` Dockerfile
 > You also have the option to remove the images if necessary using `--rmi type`.
 
 #### Switch PHP version with a single command
-`docker-compose down && docker-compose build --build-arg PHP_VERSION=7.2 && docker-compose up -d`
+`docker-compose down && docker-compose build --build-arg PHP_VERSION=5.6 && docker-compose up -d`
 
 #### Switch PHP version with a single command & delete intermediate images (good for debugging)
 `docker-compose down && docker-compose build --no-cache --force-rm --build-arg PHP_VERSION=7.2 && docker-compose up -d`

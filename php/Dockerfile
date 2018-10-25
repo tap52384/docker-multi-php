@@ -8,6 +8,28 @@ ARG PHP_VERSION=""
 # result, otherwise the result is the empty string
 FROM php:${PHP_VERSION:+${PHP_VERSION}-}fpm-alpine
 
+# Set up the Oracle environment variables
+ENV LD_LIBRARY_PATH /usr/lib/oracle/12.1/client64/lib/
+ENV ORACLE_HOME /usr/lib/oracle/12.1/client64/lib/
+
+# Install the Oracle InstantClient libraries for Linux x64
+# The <src> is relative to the location of this Dockerfile
+COPY oracle/instantclient-basiclite-linux.x64-12.1.0.2.0.zip /tmp/
+COPY oracle/instantclient-sdk-linux.x64-12.1.0.2.0.zip /tmp/
+COPY oracle/instantclient-sqlplus-linux.x64-12.1.0.2.0.zip /tmp/
+RUN unzip /tmp/instantclient-basiclite-linux.x64-12.1.0.2.0.zip -d /usr/local/bin/ && \
+unzip /tmp/instantclient-sdk-linux.x64-12.1.0.2.0.zip -d /usr/local/bin/ && \
+unzip /tmp/instantclient-sqlplus-linux.x64-12.1.0.2.0.zip -d /usr/local/bin/ && \
+ln -s /usr/local/bin/instantclient_12_1/sdk/include/*.h /usr/local/include/ && \
+ln -s /usr/local/bin/instantclient_12_1/sqlplus /usr/local/bin/ && \
+ln -s /usr/local/bin/instantclient_12_1/*.dylib /usr/local/lib/ && \
+ln -s /usr/local/bin/instantclient_12_1/*.dylib.12.1 /usr/local/lib/ && \
+ln -s /usr/local/lib/libclntsh.dylib.12.1 /usr/local/lib/libclntsh.dylib && \
+# https://stackoverflow.com/questions/38206964/compile-php-oci8-extension-under-alpinelinux
+docker-php-ext-configure oci8 --with-oci8=instantclient,/usr/local/lib && \
+docker-php-ext-install oci8 --with-oci8=instantclient,/usr/local/bin
+
+
 # To reduce the amount of layers, try to use a single RUN instruction
 RUN apk update; \
 apk upgrade; \
