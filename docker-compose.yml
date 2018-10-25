@@ -44,7 +44,7 @@ services:
     # This correctly mounts the "~/sites" folder in the "apache" container at
     # /var/www/html
     volumes:
-      - ~/sites/:/var/www/html
+      - ~/sites/trafficcop2016:/var/www/html
   apache:
     build:
       args:
@@ -66,9 +66,7 @@ services:
     # This correctly mounts the "~/sites" folder in the "apache" container at
     # /var/www/html
     volumes:
-      - ~/sites/:/var/www/html
+      - ~/sites/trafficcop2016/:/var/www/html
 networks:
   frontend:
   backend:
-volumes:
-  sites:

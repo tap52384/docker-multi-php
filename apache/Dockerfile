@@ -8,7 +8,8 @@ RUN apk update; \
     apk upgrade;
 
 # Copy apache vhost file to proxy php requests to php-fpm container
-# TODO: learn exactly how this works
+# https://docs.docker.com/engine/reference/builder/#copy
 COPY demo.apache.conf /usr/local/apache2/conf/demo.apache.conf
+COPY httpd-vhosts.conf /usr/local/apache2/conf/extra/httpd-vhosts.conf
 RUN echo "Include /usr/local/apache2/conf/demo.apache.conf" \
     >> /usr/local/apache2/conf/httpd.conf

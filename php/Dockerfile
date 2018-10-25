@@ -8,31 +8,37 @@ ARG PHP_VERSION=""
 # result, otherwise the result is the empty string
 FROM php:${PHP_VERSION:+${PHP_VERSION}-}fpm-alpine
 
-
-
+# To reduce the amount of layers, try to use a single RUN instruction
 RUN apk update; \
 apk upgrade; \
 # required for installing PHP packages
-apk add --update --no-cache autoconf \
+apk add --update --no-cache \
+autoconf \
 curl \
 g++ \
 gcc \
+libaio \
 make \
-sed && \
+re2c \
+sed \
+yaml-dev && \
 # Update PECL sources before continuing
 pecl channel-update pecl.php.net && \
+# Install Composer
+printf "Downloading and installing Composer ..." && \
+curl -sS https://getcomposer.org/installer | \
+php -- --install-dir=/usr/local/bin --filename=composer && \
+# chmod +x /usr/local/bin/composer
 # the last line inside an if or else block requires a semicolon (;)
 # string comparison in "sh" is different than "bash"
-if [[ $PHP_VERSION == "5.6"* || $PHP_VERSION == 5.6* || \
-$PHP_VERSION == "5.6.38" ]] ; then \
+if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
 echo "${COLOR_YELLOW}PHP version is 5.6.*: $PHP_VERSION" && \
-printf "\n" | pecl install apcu-4.0.11; \
+printf "\n" | pecl install apcu-4.0.11 && \
+printf "\n" | pecl install yaml-1.3.1 && \
+pecl install xdebug-2.5.5; \
 else \
 echo "${COLOR_GREEN}PHP version is NOT 5.6.*: $PHP_VERSION" && \
 pecl uninstall -r apcu && pecl install apcu && \
 pecl uninstall -r yaml && pecl install yaml && \
 pecl uninstall -r xdebug && pecl install xdebug; \
-fi
-
-# printf "\n" | pecl install yaml-1.3.1 && \
-# pecl install xdebug-2.5.5
+fi 
