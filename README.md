@@ -81,6 +81,9 @@ as the PHP_VERSION variable is only used in the `php` Dockerfile
 #### [See all containers, running or not]()
 `docker ps --all`
 
+#### [List only stopped containers](https://stackoverflow.com/a/30231188/1620794)
+`docker ps -qf "status=exited"`
+
 #### [Stop one or more running containers]()
 `docker stop CONTAINER [CONTAINER...]`
 
@@ -136,10 +139,8 @@ as the PHP_VERSION variable is only used in the `php` Dockerfile
 -   [`registry.access.redhat.com/rhel7-rhel-minimal` - RHEL Minimal Base Image](https://access.redhat.com/containers/?tab=images&platform=docker#/registry.access.redhat.com/rhel7-rhel-minimal)
 -   [`thomasbisignani/docker-apache-php-oracle` - docker-apache-php-oracle](https://hub.docker.com/r/thomasbisignani/docker-apache-php-oracle/)
 
-
-
 ## TODO
+
 -   Install Oracle drivers
--   Fix it so that build-args are consumed so that the host path can be set
-upon build
--   Think about how to 
+-   Fix it so that build-args are consumed so that the host path can be set upon build
+-   Will copy how .deb files set up Oracle InstantClient drivers
